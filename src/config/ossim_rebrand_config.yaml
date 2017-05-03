@@ -1,0 +1,14 @@
+---
+#Sensor details
+sensor:
+ source_file: menu.cfg
+ source_location: \etc\ossim
+ items_list: [label,text,confirm,menus,info]
+ replace_what: alienvault
+ replace_with: securmatic
+config:
+ debug: on
+ log: true
+ log_location: \opt\rebrand
+ log_name: rebrand_log.log
+ format: '%d-%t-%f-%l'
