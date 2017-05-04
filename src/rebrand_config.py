@@ -2,6 +2,7 @@
 
 import os
 import yaml
+import logging
 
 
 
@@ -33,6 +34,9 @@ def read_yaml(config_file_location,config_file_name):
 	message = 'Open: '+config_file_name+' ' +file_status
 	return message
 
+def enable_logging():
+	logging.basicConfig(filename='test.log',level=logging.INFO)
+
 def find_and_replace(text, what_str, with_str):
 	""" Gets a text  and replaces the with_str with what_str """
 
@@ -45,19 +49,20 @@ def find_and_replace(text, what_str, with_str):
 		return "text can not be Null"
 
 	if what_str in text.split():
-		print ("String Before - "+text)
+		logging.info ("String Before - "+text)
 		text = text.replace(what_str,with_str)
-		print ("String After - "+text)
+		logging.info ("String After - "+text)
 	else:
 		return what_str+" Not in "+ text
 	return text
+
 
 import unittest
 
 class RebrandOSSIMTest(unittest.TestCase):
 
 	def setUp(self):
-		pass
+		enable_logging()
 
 	def test_read_yaml(self):
 		self.assertEqual(read_yaml('src/config/','ossim_rebrand_config.yaml'),'Open: ossim_rebrand_config.yaml success')
