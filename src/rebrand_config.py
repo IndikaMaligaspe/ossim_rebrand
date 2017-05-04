@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
 import os
+import sys
+import fileinput
 import yaml
 import logging
 
@@ -56,13 +58,35 @@ def find_and_replace(text, what_str, with_str):
 		return what_str+" Not in "+ text
 	return text
 
+def open_config_files(config_path,config_file_name,file_extenssion):
+	global read_file , write_file
+
+	read_file_path_name = config_path+config_file_name+file_extenssion
+	write_file_path_name = config_path+config_file_name+'.fer'
+
+	try:
+		read_file = open(read_file_path_name,"r")
+		write_file = open(write_file_path_name,"w")
+	except IOError as err:
+		logging.error('Error while reading read_file_path_name  - '+str(err))
+		return False
+	return True
+
+def close_config_files(read_file,write_file):
+	read_file.close()
+	write_file.close()
+	return True
 
 import unittest
 
 class RebrandOSSIMTest(unittest.TestCase):
 
 	def setUp(self):
+		global read_file , write_file
 		enable_logging()
+
+		read_file = open('/workspace/OSSIM/rebranding/May-2017/rebranded/menu.cfg',"r")
+		write_file = open('/workspace/OSSIM/rebranding/May-2017/rebranded/menu.cfr',"w")
 
 	def test_read_yaml(self):
 		self.assertEqual(read_yaml('src/config/','ossim_rebrand_config.yaml'),'Open: ossim_rebrand_config.yaml success')
@@ -85,6 +109,15 @@ class RebrandOSSIMTest(unittest.TestCase):
 	def test_find_and_replace_when_text_None(self):
 		self.assertEqual(find_and_replace(None,'Alienvault', 'Securmatic'),'text can not be Null')
 
+	def test_open_config_file(self):
+		self.assertTrue(open_config_files('/workspace/OSSIM/rebranding/May-2017/rebranded/','menu','.cfg'))
+
+	def test_open_config_file_with_incorrect_path(self):
+		self.assertFalse(open_config_files('/workspace/OSSIM/rebranding/May-2017/','menu','.cfg'))
+
+
+	def test_close_config_file(self):
+		self.assertTrue(close_config_files(read_file,write_file))
 
 
 if __name__ == '__main__':
