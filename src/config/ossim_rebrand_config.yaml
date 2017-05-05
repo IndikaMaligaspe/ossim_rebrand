@@ -2,7 +2,7 @@
 #Sensor details
 sensor:
  source_file: menu.cfg
- source_location: \etc\ossim
+ source_location: /workspace/OSSIM/rebranding/May-2017/rebranded
  items_list: [label,text,confirm,menus,info]
  replace_what: alienvault
  replace_with: securmatic
