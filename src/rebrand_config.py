@@ -72,16 +72,19 @@ def open_config_files(config_path,config_file_name,file_extenssion):
 		return False
 	return True
 
-def read_and_replace_lines(read_file):
+def read_and_replace_lines(read_file,item_list,what_str,with_str):
 	try:
 		for line in read_file:
 			if "=" in line:
 				key_value =  line.split('=')
-				# print key_value
+				if key_value[0] in item_list:
+					new_line = find_and_replace(line, what_str, with_str)
+					line = new_line
 
+			print line
 
 	except Exception as exe:
-		logging.error('Error while reading   - '+str(exe))
+		logging.error('Error while reading and replacing lines - '+str(exe))
 		return False
 	return True
 
@@ -135,7 +138,7 @@ class RebrandOSSIMTest(unittest.TestCase):
 		self.assertFalse(open_config_files('/workspace/OSSIM/rebranding/May-2017/','menu','.cfg'))
 
 	def test_read_and_replace_lines(self):
-		self.assertTrue(read_and_replace_lines(read_file))
+		self.assertTrue(read_and_replace_lines(read_file,item_list,'Alienvault','Securmatic'))
 
 	def test_close_config_file(self):
 		self.assertTrue(close_config_files(read_file,write_file))
