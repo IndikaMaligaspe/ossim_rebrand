@@ -68,13 +68,31 @@ def open_config_files(config_path,config_file_name,file_extenssion):
 		read_file = open(read_file_path_name,"r")
 		write_file = open(write_file_path_name,"w")
 	except IOError as err:
-		logging.error('Error while reading read_file_path_name  - '+str(err))
+		logging.error('Error while opening read_file_path_name  - '+str(err))
 		return False
 	return True
 
+def read_and_replace_lines(read_file):
+	try:
+		for line in read_file:
+			if "=" in line:
+				key_value =  line.split('=')
+				# print key_value
+
+
+	except Exception as exe:
+		logging.error('Error while reading   - '+str(exe))
+		return False
+	return True
+
+
 def close_config_files(read_file,write_file):
-	read_file.close()
-	write_file.close()
+	try:
+		read_file.close()
+		write_file.close()
+	except IOError as err:
+		logging.error('Error while closing read_file / write files  - '+str(err))
+		return False
 	return True
 
 import unittest
@@ -82,7 +100,8 @@ import unittest
 class RebrandOSSIMTest(unittest.TestCase):
 
 	def setUp(self):
-		global read_file , write_file
+		global read_file , write_file,  item_list
+		item_list = ['label','text','confirm','menus,info']
 		enable_logging()
 
 		read_file = open('/workspace/OSSIM/rebranding/May-2017/rebranded/menu.cfg',"r")
@@ -115,6 +134,8 @@ class RebrandOSSIMTest(unittest.TestCase):
 	def test_open_config_file_with_incorrect_path(self):
 		self.assertFalse(open_config_files('/workspace/OSSIM/rebranding/May-2017/','menu','.cfg'))
 
+	def test_read_and_replace_lines(self):
+		self.assertTrue(read_and_replace_lines(read_file))
 
 	def test_close_config_file(self):
 		self.assertTrue(close_config_files(read_file,write_file))
