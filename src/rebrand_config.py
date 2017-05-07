@@ -5,11 +5,13 @@ import sys
 import fileinput
 import yaml
 import logging
-
+import datetime
+from shutil import move
 
 
 def read_yaml(config_file_location,config_file_name):
 	""" reads config file and reads all elements into a dictionary """
+	logging.info(" reads config file and reads all elements into a dictionary ")
 	global sensor_configs ,standard_configs
 	sensor_configs = {}
 	standard_configs = {}
@@ -37,9 +39,10 @@ def read_yaml(config_file_location,config_file_name):
 	return message
 
 def enable_logging():
-	logging.basicConfig(filename='test.log',level=logging.INFO)
+	logging.basicConfig(filename='test.log',level=logging.DEBUG)
 
 def find_and_replace(text, what_str, with_str):
+	logging.debug ("find_and_replace {0} , {1} - " .format(what_str,with_str))
 	""" Gets a text  and replaces the with_str with what_str """
 
 	if what_str is None:
@@ -50,12 +53,12 @@ def find_and_replace(text, what_str, with_str):
 	if text is None:
 		return "text can not be Null"
 
-	if what_str in text.split():
-		logging.info ("String Before - "+text)
+	if what_str.upper() in text.upper():
+		logging.debug ("String Before - "+text)
 		text = text.replace(what_str,with_str)
-		logging.info ("String After - "+text)
+		logging.debug ("String After - "+text)
 	else:
-		return what_str+" Not in "+ text
+		logging.debug (what_str+" Not in "+ text)
 	return text
 
 def open_config_files(config_path,config_file_name,file_extenssion):
@@ -72,22 +75,47 @@ def open_config_files(config_path,config_file_name,file_extenssion):
 		return False
 	return True
 
-def read_and_replace_lines(read_file,item_list,what_str,with_str):
+def read_and_replace_lines(read_file,write_file_name,item_list,what_str,with_str):
 	try:
+		write_line=''
+			
 		for line in read_file:
 			if "=" in line:
 				key_value =  line.split('=')
+				logging.debug('Key Value.....'+str(key_value))
+				logging.debug('item_list.....'+str(item_list))
 				if key_value[0] in item_list:
 					new_line = find_and_replace(line, what_str, with_str)
 					line = new_line
-
-			print line
-
+	
+			write_line = write_line + line
+		write_file = open(write_file_name,"w")
+		write_file.write(write_line)	
+		write_file.close()
+		logging.info("---------------Finished Writing %s -------------------" %write_file_name)
 	except Exception as exe:
 		logging.error('Error while reading and replacing lines - '+str(exe))
 		return False
 	return True
 
+def backup_and_rename_main_file(file_location,original_file,tmp_file):
+	try:
+		back_up_file_name = datetime.datetime.now().strftime("%d-%M-%Y-%I")
+		abs_original_file = file_location+original_file
+		abs_backup_file  = file_location+original_file +".backup."+back_up_file_name
+		abs_tmp_file = file_location+tmp_file
+
+		logging.debug("original File {0}".format(str(abs_original_file)))
+		logging.debug("backup File {0}".format(str(abs_backup_file)))
+
+		move(abs_original_file,abs_backup_file)
+		move(abs_tmp_file,abs_original_file)
+		logging.info("{0} file recreated with renamed charactaers...".format(abs_original_file))
+
+	except IOError as ioer:
+		logging.error('Error while backing up and renaming - '+str(ioer))
+		return False
+	return True;
 
 def close_config_files(read_file,write_file):
 	try:
@@ -98,51 +126,8 @@ def close_config_files(read_file,write_file):
 		return False
 	return True
 
-import unittest
 
-class RebrandOSSIMTest(unittest.TestCase):
-
-	def setUp(self):
-		global read_file , write_file,  item_list
-		item_list = ['label','text','confirm','menus,info']
-		enable_logging()
-
-		read_file = open('/workspace/OSSIM/rebranding/May-2017/rebranded/menu.cfg',"r")
-		write_file = open('/workspace/OSSIM/rebranding/May-2017/rebranded/menu.cfr',"w")
-
-	def test_read_yaml(self):
-		self.assertEqual(read_yaml('src/config/','ossim_rebrand_config.yaml'),'Open: ossim_rebrand_config.yaml success')
-
-	def test_read_yaml_with_wrong_file_name(self):	
-		self.assertEqual(read_yaml('src/config/','ossim_rebrand.yaml'),'Open: ossim_rebrand.yaml  Failed with No such file or directory')
-
-	def test_find_and_replace(self):
-		self.assertEqual(find_and_replace('Alienvault Setup','Alienvault', 'Securmatic'),'Securmatic Setup')
-
-	def test_find_and_replace_when_which_string_not_in_text(self):
-		self.assertEqual(find_and_replace('Alienvault Setup','Test', 'Securmatic'),'Test Not in Alienvault Setup')
-
-	def test_find_and_replace_when_what_string_None(self):
-		self.assertEqual(find_and_replace('Alienvault Setup',None, 'Securmatic'),'what_str can not be Null')
-
-	def test_find_and_replace_when_with_string_None(self):
-		self.assertEqual(find_and_replace('Alienvault Setup','Alienvault', None),'with_str can not be Null')
-
-	def test_find_and_replace_when_text_None(self):
-		self.assertEqual(find_and_replace(None,'Alienvault', 'Securmatic'),'text can not be Null')
-
-	def test_open_config_file(self):
-		self.assertTrue(open_config_files('/workspace/OSSIM/rebranding/May-2017/rebranded/','menu','.cfg'))
-
-	def test_open_config_file_with_incorrect_path(self):
-		self.assertFalse(open_config_files('/workspace/OSSIM/rebranding/May-2017/','menu','.cfg'))
-
-	def test_read_and_replace_lines(self):
-		self.assertTrue(read_and_replace_lines(read_file,item_list,'Alienvault','Securmatic'))
-
-	def test_close_config_file(self):
-		self.assertTrue(close_config_files(read_file,write_file))
-
-
+def main():
+	
 if __name__ == '__main__':
-    unittest.main()
+    main()
