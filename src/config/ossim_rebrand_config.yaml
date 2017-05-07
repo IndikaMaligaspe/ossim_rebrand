@@ -3,9 +3,9 @@
 sensor:
  source_file: menu.cfg
  source_location: /workspace/OSSIM/rebranding/May-2017/rebranded
- items_list: [label,text,confirm,menus,info]
- replace_what: alienvault
- replace_with: securmatic
+ items_list: [label,text,confirm,menus,info,]
+ replace_what: Alienvault
+ replace_with: Securmatic
 config:
  debug: on
  log: true
