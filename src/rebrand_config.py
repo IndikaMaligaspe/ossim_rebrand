@@ -19,14 +19,50 @@ def read_yaml(config_file_location,config_file_name):
 	try:
 		with open(config_file_location+config_file_name, 'r') as yfile:
 			doc = yaml.load(yfile)
-			sensor_configs['source_file'] = doc["sensor"]["source_file"]
-			sensor_configs['source_location'] = doc["sensor"]["source_location"]
-			sensor_configs['source_file_ext'] = doc["sensor"]["source_file_ext"]
-			sensor_configs['dest_file'] = doc["sensor"]["dest_file"]
-			sensor_configs['dest_file_ext'] = doc["sensor"]["dest_file_ext"]
-			sensor_configs['items_list'] = doc["sensor"]["items_list"]
-			sensor_configs['replace_what'] = doc["sensor"]["replace_what"]
-			sensor_configs['replace_with'] = doc["sensor"]["replace_with"]
+			sensor_configs['menu-cfg.source_file'] = doc["sensor"]["menu-cfg"]["source_file"]
+			sensor_configs['menu-cfg.source_location'] = doc["sensor"]["menu-cfg"]["source_location"]
+			sensor_configs['menu-cfg.source_file_ext'] = doc["sensor"]["menu-cfg"]["source_file_ext"]
+			sensor_configs['menu-cfg.dest_file'] = doc["sensor"]["menu-cfg"]["dest_file"]
+			sensor_configs['menu-cfg.dest_file_ext'] = doc["sensor"]["menu-cfg"]["dest_file_ext"]
+			sensor_configs['menu-cfg.items_list'] = doc["sensor"]["menu-cfg"]["items_list"]
+			sensor_configs['menu-cfg.replace_what'] = doc["sensor"]["menu-cfg"]["replace_what"]
+			sensor_configs['menu-cfg.replace_with'] = doc["sensor"]["menu-cfg"]["replace_with"]
+
+			sensor_configs['menu-network-cfg.source_file'] = doc["sensor"]["menu-network-cfg"]["source_file"]
+			sensor_configs['menu-network-cfg.source_location'] = doc["sensor"]["menu-network-cfg"]["source_location"]
+			sensor_configs['menu-network-cfg.source_file_ext'] = doc["sensor"]["menu-network-cfg"]["source_file_ext"]
+			sensor_configs['menu-network-cfg.dest_file'] = doc["sensor"]["menu-network-cfg"]["dest_file"]
+			sensor_configs['menu-network-cfg.dest_file_ext'] = doc["sensor"]["menu-network-cfg"]["dest_file_ext"]
+			sensor_configs['menu-network-cfg.items_list'] = doc["sensor"]["menu-network-cfg"]["items_list"]
+			sensor_configs['menu-network-cfg.replace_what'] = doc["sensor"]["menu-network-cfg"]["replace_what"]
+			sensor_configs['menu-network-cfg.replace_with'] = doc["sensor"]["menu-network-cfg"]["replace_with"]
+
+			sensor_configs['ossim-setup.source_file'] = doc["sensor"]["ossim-setup"]["source_file"]
+			sensor_configs['ossim-setup.source_location'] = doc["sensor"]["ossim-setup"]["source_location"]
+			sensor_configs['ossim-setup.source_file_ext'] = doc["sensor"]["ossim-setup"]["source_file_ext"]
+			sensor_configs['ossim-setup.dest_file'] = doc["sensor"]["ossim-setup"]["dest_file"]
+			sensor_configs['ossim-setup.dest_file_ext'] = doc["sensor"]["ossim-setup"]["dest_file_ext"]
+			sensor_configs['ossim-setup.items_list'] = doc["sensor"]["ossim-setup"]["items_list"]
+			sensor_configs['ossim-setup.replace_what'] = doc["sensor"]["ossim-setup"]["replace_what"]
+			sensor_configs['ossim-setup.replace_with'] = doc["sensor"]["ossim-setup"]["replace_with"]
+
+			sensor_configs['issue.source_file'] = doc["sensor"]["issue"]["source_file"]
+			sensor_configs['issue.source_location'] = doc["sensor"]["issue"]["source_location"]
+			sensor_configs['issue.source_file_ext'] = doc["sensor"]["issue"]["source_file_ext"]
+			sensor_configs['issue.dest_file'] = doc["sensor"]["issue"]["dest_file"]
+			sensor_configs['issue.dest_file_ext'] = doc["sensor"]["issue"]["dest_file_ext"]
+			sensor_configs['issue.items_list'] = doc["sensor"]["issue"]["items_list"]
+			sensor_configs['issue.replace_what'] = doc["sensor"]["issue"]["replace_what"]
+			sensor_configs['issue.replace_with'] = doc["sensor"]["issue"]["replace_with"]
+
+			sensor_configs['moid-tail.source_file'] = doc["sensor"]["moid-tail"]["source_file"]
+			sensor_configs['moid-tail.source_location'] = doc["sensor"]["moid-tail"]["source_location"]
+			sensor_configs['moid-tail.source_file_ext'] = doc["sensor"]["moid-tail"]["source_file_ext"]
+			sensor_configs['moid-tail.dest_file'] = doc["sensor"]["moid-tail"]["dest_file"]
+			sensor_configs['moid-tail.dest_file_ext'] = doc["sensor"]["moid-tail"]["dest_file_ext"]
+			sensor_configs['moid-tail.items_list'] = doc["sensor"]["moid-tail"]["items_list"]
+			sensor_configs['moid-tail.replace_what'] = doc["sensor"]["moid-tail"]["replace_what"]
+			sensor_configs['moid-tail.replace_with'] = doc["sensor"]["moid-tail"]["replace_with"]
 
 			standard_configs['debug'] = doc["config"]["debug"]
 			standard_configs['log'] = doc["config"]["log"]
@@ -131,12 +167,12 @@ def main():
 	""" This is the main module """
 	enable_logging()
 	read_yaml('src/config/','ossim_rebrand_config.yaml')
-	write_file_name = sensor_configs['dest_file']+sensor_configs['dest_file_ext']
+	write_file_name = sensor_configs['menu-cfg.dest_file']+sensor_configs['menu-cfg.dest_file_ext']
 
-	if open_config_files(sensor_configs['source_location'],sensor_configs['source_file'],sensor_configs['source_file_ext']):
-		if read_and_replace_lines(read_file,sensor_configs['source_location']+write_file_name,sensor_configs['items_list'],sensor_configs['replace_what'],sensor_configs['replace_with']):
+	if open_config_files(sensor_configs['menu-cfg.source_location'],sensor_configs['menu-cfg.source_file'],sensor_configs['menu-cfg.source_file_ext']):
+		if read_and_replace_lines(read_file,sensor_configs['menu-cfg.source_location']+write_file_name,sensor_configs['menu-cfg.items_list'],sensor_configs['menu-cfg.replace_what'],sensor_configs['menu-cfg.replace_with']):
 			if close_config_files(read_file):
-				backup_and_rename_main_file(sensor_configs['source_location'],sensor_configs['source_file']+sensor_configs['source_file_ext'],write_file_name)
+				backup_and_rename_main_file(sensor_configs['menu-cfg.source_location'],sensor_configs['menu-cfg.source_file']+sensor_configs['menu-cfg.source_file_ext'],write_file_name)
 
 
 
