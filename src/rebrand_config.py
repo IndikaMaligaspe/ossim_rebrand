@@ -78,7 +78,7 @@ def open_config_files(config_path,config_file_name,file_extenssion):
 def read_and_replace_lines(read_file,write_file_name,item_list,what_str,with_str):
 	try:
 		write_line=''
-			
+
 		for line in read_file:
 			if "=" in line:
 				key_value =  line.split('=')
@@ -87,10 +87,10 @@ def read_and_replace_lines(read_file,write_file_name,item_list,what_str,with_str
 				if key_value[0] in item_list:
 					new_line = find_and_replace(line, what_str, with_str)
 					line = new_line
-	
+
 			write_line = write_line + line
 		write_file = open(write_file_name,"w")
-		write_file.write(write_line)	
+		write_file.write(write_line)
 		write_file.close()
 		logging.info("---------------Finished Writing %s -------------------" %write_file_name)
 	except Exception as exe:
@@ -128,6 +128,7 @@ def close_config_files(read_file,write_file):
 
 
 def main():
-	
+	""" This is the main module """
+
 if __name__ == '__main__':
     main()

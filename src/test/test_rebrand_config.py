@@ -2,7 +2,7 @@
 
 
 import unittest
-import rebrand_config
+from  src  import rebrand_config
 
 class RebrandOSSIMTest(unittest.TestCase):
 
@@ -12,12 +12,12 @@ class RebrandOSSIMTest(unittest.TestCase):
 		rebrand_config.enable_logging()
 		write_file = open('/workspace/OSSIM/rebranding/May-2017/rebranded/menu.cfr',"w")
 		read_file = open('/workspace/OSSIM/rebranding/May-2017/rebranded/menu.cfg',"r")
-		
+
 
 	def test_000_read_yaml(self):
-		self.assertEqual(rebrand_config.read_yaml('config/','ossim_rebrand_config.yaml'),'Open: ossim_rebrand_config.yaml success')
+		self.assertEqual(rebrand_config.read_yaml('src/config/','ossim_rebrand_config.yaml'),'Open: ossim_rebrand_config.yaml success')
 
-	def test_001_read_yaml_with_wrong_file_name(self):	
+	def test_001_read_yaml_with_wrong_file_name(self):
 		self.assertEqual(rebrand_config.read_yaml('config/','ossim_rebrand.yaml'),'Open: ossim_rebrand.yaml  Failed with No such file or directory')
 
 	def test_002_find_and_replace(self):
