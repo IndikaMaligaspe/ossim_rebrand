@@ -1,10 +1,13 @@
 ---
 #Sensor details
 sensor:
- source_file: menu.cfg
- source_location: /workspace/OSSIM/rebranding/May-2017/rebranded
- items_list: [label,text,confirm,menus,info,]
- replace_what: Alienvault
+ source_file: menu
+ source_file_ext: .cfg
+ source_location: /workspace/OSSIM/rebranding/May-2017/rebranded/
+ dest_file: menu
+ dest_file_ext: .ctr
+ items_list: [label,text,confirm,menus,info,cmd,next,next_else]
+ replace_what: AlienVault
  replace_with: Securmatic
 config:
  debug: on

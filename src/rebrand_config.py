@@ -21,6 +21,9 @@ def read_yaml(config_file_location,config_file_name):
 			doc = yaml.load(yfile)
 			sensor_configs['source_file'] = doc["sensor"]["source_file"]
 			sensor_configs['source_location'] = doc["sensor"]["source_location"]
+			sensor_configs['source_file_ext'] = doc["sensor"]["source_file_ext"]
+			sensor_configs['dest_file'] = doc["sensor"]["dest_file"]
+			sensor_configs['dest_file_ext'] = doc["sensor"]["dest_file_ext"]
 			sensor_configs['items_list'] = doc["sensor"]["items_list"]
 			sensor_configs['replace_what'] = doc["sensor"]["replace_what"]
 			sensor_configs['replace_with'] = doc["sensor"]["replace_with"]
@@ -65,11 +68,9 @@ def open_config_files(config_path,config_file_name,file_extenssion):
 	global read_file , write_file
 
 	read_file_path_name = config_path+config_file_name+file_extenssion
-	write_file_path_name = config_path+config_file_name+'.fer'
 
 	try:
 		read_file = open(read_file_path_name,"r")
-		write_file = open(write_file_path_name,"w")
 	except IOError as err:
 		logging.error('Error while opening read_file_path_name  - '+str(err))
 		return False
@@ -117,10 +118,9 @@ def backup_and_rename_main_file(file_location,original_file,tmp_file):
 		return False
 	return True;
 
-def close_config_files(read_file,write_file):
+def close_config_files(read_file):
 	try:
 		read_file.close()
-		write_file.close()
 	except IOError as err:
 		logging.error('Error while closing read_file / write files  - '+str(err))
 		return False
@@ -129,6 +129,17 @@ def close_config_files(read_file,write_file):
 
 def main():
 	""" This is the main module """
+	enable_logging()
+	read_yaml('src/config/','ossim_rebrand_config.yaml')
+	write_file_name = sensor_configs['dest_file']+sensor_configs['dest_file_ext']
+
+	if open_config_files(sensor_configs['source_location'],sensor_configs['source_file'],sensor_configs['source_file_ext']):
+		if read_and_replace_lines(read_file,sensor_configs['source_location']+write_file_name,sensor_configs['items_list'],sensor_configs['replace_what'],sensor_configs['replace_with']):
+			if close_config_files(read_file):
+				backup_and_rename_main_file(sensor_configs['source_location'],sensor_configs['source_file']+sensor_configs['source_file_ext'],write_file_name)
+
+
+
 
 if __name__ == '__main__':
     main()
