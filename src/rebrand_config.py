@@ -101,7 +101,10 @@ def find_and_replace(text, what_str, with_str):
 	return text
 
 def open_config_files(config_path,config_file_name,file_extenssion):
-	global read_file , write_file
+	global read_file
+
+	if None == file_extenssion:
+		file_extenssion=''
 
 	read_file_path_name = config_path+config_file_name+file_extenssion
 
@@ -115,16 +118,21 @@ def open_config_files(config_path,config_file_name,file_extenssion):
 def read_and_replace_lines(read_file,write_file_name,item_list,what_str,with_str):
 	try:
 		write_line=''
+		what_str_list = what_str.split(',')
+		with_str_list = with_str.split(',')
 
 		for line in read_file:
+			key_value = ['']
 			if "=" in line:
 				key_value =  line.split('=')
 				logging.debug('Key Value.....'+str(key_value))
 				logging.debug('item_list.....'+str(item_list))
-				if key_value[0] in item_list:
-					new_line = find_and_replace(line, what_str, with_str)
+			if (key_value[0] in item_list) or (len(item_list)==0):
+				i=0
+				for what_str in what_str_list:
+					new_line = find_and_replace(line, what_str, with_str_list[i])
 					line = new_line
-
+					i+=1
 			write_line = write_line + line
 		write_file = open(write_file_name,"w")
 		write_file.write(write_line)
@@ -169,13 +177,33 @@ def main():
 	read_yaml('src/config/','ossim_rebrand_config.yaml')
 	write_file_name = sensor_configs['menu-cfg.dest_file']+sensor_configs['menu-cfg.dest_file_ext']
 
+	""" For menu.cfg file in /etc/ossim folder """
 	if open_config_files(sensor_configs['menu-cfg.source_location'],sensor_configs['menu-cfg.source_file'],sensor_configs['menu-cfg.source_file_ext']):
 		if read_and_replace_lines(read_file,sensor_configs['menu-cfg.source_location']+write_file_name,sensor_configs['menu-cfg.items_list'],sensor_configs['menu-cfg.replace_what'],sensor_configs['menu-cfg.replace_with']):
 			if close_config_files(read_file):
 				backup_and_rename_main_file(sensor_configs['menu-cfg.source_location'],sensor_configs['menu-cfg.source_file']+sensor_configs['menu-cfg.source_file_ext'],write_file_name)
 
+	""" For menu-network.cfg file in /etc/ossim folder """
+	if open_config_files(sensor_configs['menu-network-cfg.source_location'],sensor_configs['menu-network-cfg.source_file'],sensor_configs['menu-network-cfg.source_file_ext']):
+		if read_and_replace_lines(read_file,sensor_configs['menu-network-cfg.source_location']+write_file_name,sensor_configs['menu-network-cfg.items_list'],sensor_configs['menu-network-cfg.replace_what'],sensor_configs['menu-network-cfg.replace_with']):
+			if close_config_files(read_file):
+				backup_and_rename_main_file(sensor_configs['menu-network-cfg.source_location'],sensor_configs['menu-network-cfg.source_file']+sensor_configs['menu-network-cfg.source_file_ext'],write_file_name)
 
+	""" For ossim-setup.conf file in /etc/ossim-setup.conf folder """
+	if open_config_files(sensor_configs['ossim-setup.source_location'],sensor_configs['ossim-setup.source_file'],sensor_configs['ossim-setup.source_file_ext']):
+		if read_and_replace_lines(read_file,sensor_configs['ossim-setup.source_location']+write_file_name,sensor_configs['ossim-setup.items_list'],sensor_configs['ossim-setup.replace_what'],sensor_configs['ossim-setup.replace_with']):
+			if close_config_files(read_file):
+				backup_and_rename_main_file(sensor_configs['ossim-setup.source_location'],sensor_configs['ossim-setup.source_file']+sensor_configs['ossim-setup.source_file_ext'],write_file_name)
 
+	""" for /etc/issue to change login screen """
+	file_ext = sensor_configs['issue.source_file_ext']
+	if None == file_ext:
+		file_ext = ''
+
+	if open_config_files(sensor_configs['issue.source_location'],sensor_configs['issue.source_file'],file_ext):
+		if read_and_replace_lines(read_file,sensor_configs['issue.source_location']+write_file_name,sensor_configs['issue.items_list'],sensor_configs['issue.replace_what'],sensor_configs['issue.replace_with']):
+			if close_config_files(read_file):
+				backup_and_rename_main_file(sensor_configs['issue.source_location'],sensor_configs['issue.source_file']+file_ext,write_file_name)
 
 if __name__ == '__main__':
     main()

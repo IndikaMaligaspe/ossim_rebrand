@@ -16,7 +16,7 @@ sensor:
    source_location: /workspace/OSSIM/rebranding/May-2017/rebranded/
    dest_file: menu_network
    dest_file_ext: .ctr
-   items_list: [label,text,confirm,menus,info,cmd,next,next_else]
+   items_list: [label,title,text,confirm,menus,info,cmd,next,next_else]
    replace_what: AlienVault
    replace_with: Securmatic
  ossim-setup:
@@ -25,27 +25,27 @@ sensor:
   source_location: /workspace/OSSIM/rebranding/May-2017/rebranded/
   dest_file: ossim_setup
   dest_file_ext: .ctr
-  items_list: [label,text,confirm,menus,info,cmd,next,next_else]
-  replace_what: AlienVault
-  replace_with: Securmatic
+  items_list: [domain,hostname]
+  replace_what: alienvault
+  replace_with: securmatic
  issue:
   source_file: issue
   source_file_ext:
-  source_location: /workspace/OSSIM/rebranding/May-2017/rebranded/etc.isse
+  source_location: /workspace/OSSIM/rebranding/May-2017/rebranded/etc.issue/
   dest_file: issue
   dest_file_ext: .ctr
   items_list: []
-  replace_what: [AlienVault,alienvault]
-  replace_with: [Securmatic,securmatic]
+  replace_what: AlienVault,alienvault
+  replace_with: Securmatic,securmatic
  moid-tail:
   source_file: moid.tail
   source_file_ext:
-  source_location: /workspace/OSSIM/rebranding/May-2017/rebranded/etc.isse
+  source_location: /workspace/OSSIM/rebranding/May-2017/rebranded/etc.issue/
   dest_file: moid.tail
   dest_file_ext: .ctr
   items_list: []
-  replace_what: [AlienVault,alienvault]
-  replace_with: [Securmatic,securmatic]
+  replace_what: AlienVault,alienvault
+  replace_with: Securmatic,securmatic
 
 config:
  debug: on
