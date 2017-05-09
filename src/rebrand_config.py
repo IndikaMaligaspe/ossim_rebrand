@@ -55,14 +55,14 @@ def read_yaml(config_file_location,config_file_name):
 			sensor_configs['issue.replace_what'] = doc["sensor"]["issue"]["replace_what"]
 			sensor_configs['issue.replace_with'] = doc["sensor"]["issue"]["replace_with"]
 
-			sensor_configs['moid-tail.source_file'] = doc["sensor"]["moid-tail"]["source_file"]
-			sensor_configs['moid-tail.source_location'] = doc["sensor"]["moid-tail"]["source_location"]
-			sensor_configs['moid-tail.source_file_ext'] = doc["sensor"]["moid-tail"]["source_file_ext"]
-			sensor_configs['moid-tail.dest_file'] = doc["sensor"]["moid-tail"]["dest_file"]
-			sensor_configs['moid-tail.dest_file_ext'] = doc["sensor"]["moid-tail"]["dest_file_ext"]
-			sensor_configs['moid-tail.items_list'] = doc["sensor"]["moid-tail"]["items_list"]
-			sensor_configs['moid-tail.replace_what'] = doc["sensor"]["moid-tail"]["replace_what"]
-			sensor_configs['moid-tail.replace_with'] = doc["sensor"]["moid-tail"]["replace_with"]
+			sensor_configs['motd-tail.source_file'] = doc["sensor"]["motd-tail"]["source_file"]
+			sensor_configs['motd-tail.source_location'] = doc["sensor"]["motd-tail"]["source_location"]
+			sensor_configs['motd-tail.source_file_ext'] = doc["sensor"]["motd-tail"]["source_file_ext"]
+			sensor_configs['motd-tail.dest_file'] = doc["sensor"]["motd-tail"]["dest_file"]
+			sensor_configs['motd-tail.dest_file_ext'] = doc["sensor"]["motd-tail"]["dest_file_ext"]
+			sensor_configs['motd-tail.items_list'] = doc["sensor"]["motd-tail"]["items_list"]
+			sensor_configs['motd-tail.replace_what'] = doc["sensor"]["motd-tail"]["replace_what"]
+			sensor_configs['motd-tail.replace_with'] = doc["sensor"]["motd-tail"]["replace_with"]
 
 			standard_configs['debug'] = doc["config"]["debug"]
 			standard_configs['log'] = doc["config"]["log"]
@@ -145,6 +145,7 @@ def read_and_replace_lines(read_file,write_file_name,item_list,what_str,with_str
 
 def backup_and_rename_main_file(file_location,original_file,tmp_file):
 	try:
+		logging.debug("file_location - {0} / {1}, with {2}".format(file_location , original_file,tmp_file))
 		back_up_file_name = datetime.datetime.now().strftime("%d-%M-%Y-%I")
 		abs_original_file = file_location+original_file
 		abs_backup_file  = file_location+original_file +".backup."+back_up_file_name
@@ -204,6 +205,12 @@ def main():
 		if read_and_replace_lines(read_file,sensor_configs['issue.source_location']+write_file_name,sensor_configs['issue.items_list'],sensor_configs['issue.replace_what'],sensor_configs['issue.replace_with']):
 			if close_config_files(read_file):
 				backup_and_rename_main_file(sensor_configs['issue.source_location'],sensor_configs['issue.source_file']+file_ext,write_file_name)
+
+	""" for /etc/motd.tail to change login screen. Will be replacing the motd.tail with issue file """
+	if open_config_files(sensor_configs['motd-tail.source_location'],sensor_configs['motd-tail.source_file'],file_ext):
+		if close_config_files(read_file):
+			write_file_name = sensor_configs['issue.source_file']
+			backup_and_rename_main_file(sensor_configs['motd-tail.source_location'],sensor_configs['motd-tail.source_file']+file_ext,write_file_name)
 
 if __name__ == '__main__':
     main()

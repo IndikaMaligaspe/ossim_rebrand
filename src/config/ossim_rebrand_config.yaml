@@ -37,11 +37,11 @@ sensor:
   items_list: []
   replace_what: AlienVault,alienvault
   replace_with: Securmatic,securmatic
- moid-tail:
-  source_file: moid.tail
+ motd-tail:
+  source_file: motd.tail
   source_file_ext:
   source_location: /workspace/OSSIM/rebranding/May-2017/rebranded/etc.issue/
-  dest_file: moid.tail
+  dest_file: motd.tail
   dest_file_ext: .ctr
   items_list: []
   replace_what: AlienVault,alienvault
