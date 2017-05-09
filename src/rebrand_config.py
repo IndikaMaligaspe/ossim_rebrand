@@ -64,6 +64,26 @@ def read_yaml(config_file_location,config_file_name):
 			sensor_configs['motd-tail.replace_what'] = doc["sensor"]["motd-tail"]["replace_what"]
 			sensor_configs['motd-tail.replace_with'] = doc["sensor"]["motd-tail"]["replace_with"]
 
+
+
+			sensor_configs['hostname.source_file'] = doc["sensor"]["hostname"]["source_file"]
+			sensor_configs['hostname.source_location'] = doc["sensor"]["hostname"]["source_location"]
+			sensor_configs['hostname.source_file_ext'] = doc["sensor"]["hostname"]["source_file_ext"]
+			sensor_configs['hostname.dest_file'] = doc["sensor"]["hostname"]["dest_file"]
+			sensor_configs['hostname.dest_file_ext'] = doc["sensor"]["hostname"]["dest_file_ext"]
+			sensor_configs['hostname.replace_what'] = doc["sensor"]["hostname"]["replace_what"]
+			sensor_configs['hostname.replace_with'] = doc["sensor"]["hostname"]["replace_with"]
+
+			sensor_configs['hosts.source_file'] = doc["sensor"]["hosts"]["source_file"]
+			sensor_configs['hosts.source_location'] = doc["sensor"]["hosts"]["source_location"]
+			sensor_configs['hosts.source_file_ext'] = doc["sensor"]["hosts"]["source_file_ext"]
+			sensor_configs['hosts.dest_file'] = doc["sensor"]["hosts"]["dest_file"]
+			sensor_configs['hosts.dest_file_ext'] = doc["sensor"]["hosts"]["dest_file_ext"]
+			sensor_configs['hosts.replace_what'] = doc["sensor"]["hosts"]["replace_what"]
+			sensor_configs['hosts.replace_with'] = doc["sensor"]["hosts"]["replace_with"]
+
+
+
 			standard_configs['debug'] = doc["config"]["debug"]
 			standard_configs['log'] = doc["config"]["log"]
 			standard_configs['log_location'] = doc["config"]["log_location"]
@@ -211,6 +231,31 @@ def main():
 		if close_config_files(read_file):
 			write_file_name = sensor_configs['issue.source_file']
 			backup_and_rename_main_file(sensor_configs['motd-tail.source_location'],sensor_configs['motd-tail.source_file']+file_ext,write_file_name)
+
+	""" for changing the hostname """
+	file_ext = sensor_configs['hostname.source_file_ext']
+	if None == file_ext:
+		file_ext = ''
+	write_file_name = sensor_configs['hostname.dest_file']+sensor_configs['hostname.dest_file_ext']
+
+	if open_config_files(sensor_configs['hostname.source_location'],sensor_configs['hostname.source_file'],file_ext):
+		if read_and_replace_lines(read_file,sensor_configs['hostname.source_location']+write_file_name,'',sensor_configs['hostname.replace_what'],sensor_configs['hostname.replace_with']):
+			if close_config_files(read_file):
+				backup_and_rename_main_file(sensor_configs['hostname.source_location'],sensor_configs['hostname.source_file']+file_ext,write_file_name)
+
+	""" for changing the hosts file """
+	file_ext = sensor_configs['hosts.source_file_ext']
+	if None == file_ext:
+		file_ext = ''
+	write_file_name = sensor_configs['hosts.dest_file']+sensor_configs['hosts.dest_file_ext']
+
+	if open_config_files(sensor_configs['hosts.source_location'],sensor_configs['hosts.source_file'],file_ext):
+		if read_and_replace_lines(read_file,sensor_configs['hosts.source_location']+write_file_name,'',sensor_configs['hosts.replace_what'],sensor_configs['hosts.replace_with']):
+			if close_config_files(read_file):
+				backup_and_rename_main_file(sensor_configs['hosts.source_location'],sensor_configs['hosts.source_file']+file_ext,write_file_name)
+
+
+
 
 if __name__ == '__main__':
     main()

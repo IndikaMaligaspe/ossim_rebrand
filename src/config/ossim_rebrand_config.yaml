@@ -46,6 +46,22 @@ sensor:
   items_list: []
   replace_what: AlienVault,alienvault
   replace_with: Securmatic,securmatic
+ hostname:
+  source_file: hostname
+  source_file_ext:
+  source_location: /workspace/OSSIM/rebranding/May-2017/rebranded/etc.hosts/
+  dest_file: hostname
+  dest_file_ext: .ctr
+  replace_what: AlienVault,alienvault
+  replace_with: Securmatic,securmatic
+ hosts:
+  source_file: hosts
+  source_file_ext:
+  source_location: /workspace/OSSIM/rebranding/May-2017/rebranded/etc.hosts/
+  dest_file: hosts
+  dest_file_ext: .ctr
+  replace_what: AlienVault,alienvault
+  replace_with: Securmatic,securmatic
 
 config:
  debug: on
