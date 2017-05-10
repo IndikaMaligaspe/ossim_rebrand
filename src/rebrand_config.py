@@ -6,7 +6,7 @@ import fileinput
 import yaml
 import logging
 import datetime
-from shutil import move
+from shutil import move , copyfile
 
 
 def read_yaml(config_file_location,config_file_name):
@@ -183,6 +183,27 @@ def backup_and_rename_main_file(file_location,original_file,tmp_file):
 		return False
 	return True;
 
+def copy_and_replace_file(original_file,new_file):
+	try:
+		logging.debug("replace_file - file_location - {0}  with {1}".format(original_file,new_file))
+		back_up_file_name_ext = datetime.datetime.now().strftime("%d-%M-%Y-%I")
+		backup_file  = original_file +".backup."+back_up_file_name_ext
+
+		logging.debug("replace_file - original File {0}".format(str(original_file)))
+		logging.debug("replace_file - backup File {0}".format(str(backup_file)))
+
+		write_file = open(backup_file,"w")
+		write_file.close()
+		copyfile(original_file,backup_file)
+		copyfile(new_file,original_file)
+
+		logging.info("replace_file - {0} file recreated with renamed charactaers...".format(original_file))
+
+	except IOError as ioer:
+		logging.error('replace_file - Error while backing up and renaming - '+str(ioer))
+		return False
+	return True;
+
 def close_config_files(read_file):
 	try:
 		read_file.close()
@@ -218,6 +239,7 @@ def main():
 
 	""" for /etc/issue to change login screen """
 	file_ext = sensor_configs['issue.source_file_ext']
+	write_file_name = sensor_configs['issue.dest_file']+sensor_configs['issue.dest_file_ext']
 	if None == file_ext:
 		file_ext = ''
 
@@ -229,8 +251,8 @@ def main():
 	""" for /etc/motd.tail to change login screen. Will be replacing the motd.tail with issue file """
 	if open_config_files(sensor_configs['motd-tail.source_location'],sensor_configs['motd-tail.source_file'],file_ext):
 		if close_config_files(read_file):
-			write_file_name = sensor_configs['issue.source_file']
-			backup_and_rename_main_file(sensor_configs['motd-tail.source_location'],sensor_configs['motd-tail.source_file']+file_ext,write_file_name)
+			write_file_name = sensor_configs['issue.source_location']+sensor_configs['issue.source_file']+file_ext
+			copy_and_replace_file(sensor_configs['motd-tail.source_location']+sensor_configs['motd-tail.source_file'],write_file_name)
 
 	""" for changing the hostname """
 	file_ext = sensor_configs['hostname.source_file_ext']

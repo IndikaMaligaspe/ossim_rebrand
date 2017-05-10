@@ -1,4 +1,5 @@
-from distutils.core import setup
+# from distutils.core import setup
+from setuptools import setup
 
 setup(
     #Application Name
@@ -12,19 +13,21 @@ setup(
     author_email="indikamaligasp@securmatic.com",
 
     #packages
+    packages=["src"],
 
     #details
+    include_package_data=True,
 
     #license="LICENSE.txt",
 
-    description="Rebrand ossim sensor and web UI"
+    description="Rebrand ossim sensor and web UI",
 
     #long_description=open("README.txt").read(),
 
     #Dependent packages (distribution)
     install_requires=[
         "PyYAML>=3",
-        "pytest>=3"
+        "pytest>=3",
     ],
 
 )

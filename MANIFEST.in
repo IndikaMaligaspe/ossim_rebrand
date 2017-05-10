@@ -1,0 +1,2 @@
+include src/config/ossim_rebrand_config.yaml
+include LICENSE
