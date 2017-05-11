@@ -275,17 +275,31 @@ def main():
 				backup_and_rename_main_file(sensor_configs['ossim-setup.source_location'],sensor_configs['ossim-setup.source_file']+sensor_configs['ossim-setup.source_file_ext'],write_file_name)
 
 	""" For ossim-setup file in /usr/sbin folder """
-	if open_config_files(sensor_configs['ossim-setup_1.source_location'],sensor_configs['ossim-setup_1.source_file'],sensor_configs['ossim-setup_1.source_file_ext']):
+	file_ext = sensor_configs['ossim-setup_1.source_file_ext']
+	write_file_name = sensor_configs['ossim-setup_1.dest_file']+sensor_configs['ossim-setup_1.dest_file_ext']
+	if None == file_ext:
+		file_ext = ''
+
+	print "sensor_configs['ossim-setup_1.source_file'] --- "+sensor_configs['ossim-setup_1.source_file']
+
+	if open_config_files(sensor_configs['ossim-setup_1.source_location'],sensor_configs['ossim-setup_1.source_file'],file_ext):
 		if read_and_replace_lines(read_file,sensor_configs['ossim-setup_1.source_location']+write_file_name,sensor_configs['ossim-setup_1.items_list'],sensor_configs['ossim-setup_1.replace_what'],sensor_configs['ossim-setup_1.replace_with']):
 			if close_config_files(read_file):
-				backup_and_rename_main_file(sensor_configs['ossim-setup_1.source_location'],sensor_configs['ossim-setup_1.source_file']+sensor_configs['ossim-setup_1.source_file_ext'],write_file_name)
+				backup_and_rename_main_file(sensor_configs['ossim-setup_1.source_location'],sensor_configs['ossim-setup_1.source_file']+file_ext,write_file_name)
 
 
 	""" For ossim-setup file in /usr/share/ossim/setup folder """
+	file_ext = sensor_configs['ossim-setup_2.source_file_ext']
+	write_file_name = sensor_configs['ossim-setup_2.dest_file']+sensor_configs['ossim-setup_2.dest_file_ext']
+
+	print "sensor_configs['ossim-setup_2.source_file'] --- "+sensor_configs['ossim-setup_2.source_file']
+	if None == file_ext:
+		file_ext = ''
+
 	if open_config_files(sensor_configs['ossim-setup_2.source_location'],sensor_configs['ossim-setup_2.source_file'],sensor_configs['ossim-setup_2.source_file_ext']):
-		if read_and_replace_lines(read_file,sensor_configs['ossim-setup_2.source_location']+write_file_name,sensor_configs['ossim-setup_2.items_list'],sensor_configs['ossim-setup_2.replace_what'],sensor_configs['ossim-setup_2.replace_with']):
+		if read_and_replace_lines(read_file,sensor_configs['ossim-setup_2.source_location']+write_file_name,file_ext,sensor_configs['ossim-setup_2.replace_what'],sensor_configs['ossim-setup_2.replace_with']):
 			if close_config_files(read_file):
-				backup_and_rename_main_file(sensor_configs['ossim-setup_2.source_location'],sensor_configs['ossim-setup_2.source_file']+sensor_configs['ossim-setup_2.source_file_ext'],write_file_name)
+				backup_and_rename_main_file(sensor_configs['ossim-setup_2.source_location'],sensor_configs['ossim-setup_2.source_file']+file_ext,write_file_name)
 
 
 
@@ -328,7 +342,7 @@ def main():
 			if close_config_files(read_file):
 				backup_and_rename_main_file(sensor_configs['hosts.source_location'],sensor_configs['hosts.source_file']+file_ext,write_file_name)
 
-
+	
 
 
 if __name__ == '__main__':

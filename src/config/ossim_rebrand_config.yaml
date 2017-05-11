@@ -29,19 +29,19 @@ sensor:
   replace_what: alienvault
   replace_with: securmatic
  ossim-setup_1:
-   source_file: ossim_setup
+   source_file: ossim-setup
    source_file_ext:
    source_location: /workspace/OSSIM/rebranding/May-2017/rebranded/usr.sbin/
-   dest_file: ossim_setup
+   dest_file: ossim-setup
    dest_file_ext: .ctr
    items_list: []
    replace_what: AlienVault
    replace_with: Securmatic
  ossim-setup_2:
-   source_file: ossim_setup
+   source_file: ossim-setup
    source_file_ext:
-   source_location: /workspace/OSSIM/rebranding/May-2017/rebranded/usr.share.ossim.setup
-   dest_file: ossim_setup
+   source_location: /workspace/OSSIM/rebranding/May-2017/rebranded/usr.share.ossim.setup/
+   dest_file: ossim-setup
    dest_file_ext: .ctr
    items_list: []
    replace_what: AlienVault
