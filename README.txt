@@ -11,7 +11,11 @@ This is python based rebranding application written by securmatic in order insta
   7. /etc/motd-tail
 
 2. Installation
-    Download the distribution package and run python setup.py install
+    Download the distribution package 
+    tar -cvf rebrand_ossim-0.1.0.tar
+    cd rebrand_ossim-0.1.0
+    sh setup.sh
+    python setup install
 
 3. Configuration
     All configuration will be in the ossim_rebrand_config.yaml. The following gives an update for each area
@@ -31,3 +35,11 @@ This is python based rebranding application written by securmatic in order insta
      log_location: \opt\rebrand
      log_name: rebrand_log.log
      format: '%d-%t-%f-%l'
+
+4. Usage
+    rebrand_ossim-0.1.0\python src\rebrand_config.py
+
+    You can get the output in rebrand_config.log
+
+    
+

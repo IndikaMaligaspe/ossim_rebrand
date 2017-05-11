@@ -46,6 +46,43 @@ def read_yaml(config_file_location,config_file_name):
 			sensor_configs['ossim-setup.replace_what'] = doc["sensor"]["ossim-setup"]["replace_what"]
 			sensor_configs['ossim-setup.replace_with'] = doc["sensor"]["ossim-setup"]["replace_with"]
 
+			sensor_configs['ossim-setup.source_file'] = doc["sensor"]["ossim-setup"]["source_file"]
+			sensor_configs['ossim-setup.source_location'] = doc["sensor"]["ossim-setup"]["source_location"]
+			sensor_configs['ossim-setup.source_file_ext'] = doc["sensor"]["ossim-setup"]["source_file_ext"]
+			sensor_configs['ossim-setup.dest_file'] = doc["sensor"]["ossim-setup"]["dest_file"]
+			sensor_configs['ossim-setup.dest_file_ext'] = doc["sensor"]["ossim-setup"]["dest_file_ext"]
+			sensor_configs['ossim-setup.items_list'] = doc["sensor"]["ossim-setup"]["items_list"]
+			sensor_configs['ossim-setup.replace_what'] = doc["sensor"]["ossim-setup"]["replace_what"]
+			sensor_configs['ossim-setup.replace_with'] = doc["sensor"]["ossim-setup"]["replace_with"]
+
+			sensor_configs['ossim-setup.source_file'] = doc["sensor"]["ossim-setup"]["source_file"]
+			sensor_configs['ossim-setup.source_location'] = doc["sensor"]["ossim-setup"]["source_location"]
+			sensor_configs['ossim-setup.source_file_ext'] = doc["sensor"]["ossim-setup"]["source_file_ext"]
+			sensor_configs['ossim-setup.dest_file'] = doc["sensor"]["ossim-setup"]["dest_file"]
+			sensor_configs['ossim-setup.dest_file_ext'] = doc["sensor"]["ossim-setup"]["dest_file_ext"]
+			sensor_configs['ossim-setup.items_list'] = doc["sensor"]["ossim-setup"]["items_list"]
+			sensor_configs['ossim-setup.replace_what'] = doc["sensor"]["ossim-setup"]["replace_what"]
+			sensor_configs['ossim-setup.replace_with'] = doc["sensor"]["ossim-setup"]["replace_with"]
+
+			sensor_configs['ossim-setup_1.source_file'] = doc["sensor"]["ossim-setup_1"]["source_file"]
+			sensor_configs['ossim-setup_1.source_location'] = doc["sensor"]["ossim-setup_1"]["source_location"]
+			sensor_configs['ossim-setup_1.source_file_ext'] = doc["sensor"]["ossim-setup_1"]["source_file_ext"]
+			sensor_configs['ossim-setup_1.dest_file'] = doc["sensor"]["ossim-setup_1"]["dest_file"]
+			sensor_configs['ossim-setup_1.dest_file_ext'] = doc["sensor"]["ossim-setup_1"]["dest_file_ext"]
+			sensor_configs['ossim-setup_1.items_list'] = doc["sensor"]["ossim-setup_1"]["items_list"]
+			sensor_configs['ossim-setup_1.replace_what'] = doc["sensor"]["ossim-setup_1"]["replace_what"]
+			sensor_configs['ossim-setup_1.replace_with'] = doc["sensor"]["ossim-setup_1"]["replace_with"]
+
+			sensor_configs['ossim-setup_2.source_file'] = doc["sensor"]["ossim-setup_2"]["source_file"]
+			sensor_configs['ossim-setup_2.source_location'] = doc["sensor"]["ossim-setup_2"]["source_location"]
+			sensor_configs['ossim-setup_2.source_file_ext'] = doc["sensor"]["ossim-setup_2"]["source_file_ext"]
+			sensor_configs['ossim-setup_2.dest_file'] = doc["sensor"]["ossim-setup_2"]["dest_file"]
+			sensor_configs['ossim-setup_2.dest_file_ext'] = doc["sensor"]["ossim-setup_2"]["dest_file_ext"]
+			sensor_configs['ossim-setup_2.items_list'] = doc["sensor"]["ossim-setup_2"]["items_list"]
+			sensor_configs['ossim-setup_2.replace_what'] = doc["sensor"]["ossim-setup_2"]["replace_what"]
+			sensor_configs['ossim-setup_2.replace_with'] = doc["sensor"]["ossim-setup_2"]["replace_with"]
+
+
 			sensor_configs['issue.source_file'] = doc["sensor"]["issue"]["source_file"]
 			sensor_configs['issue.source_location'] = doc["sensor"]["issue"]["source_location"]
 			sensor_configs['issue.source_file_ext'] = doc["sensor"]["issue"]["source_file_ext"]
@@ -236,6 +273,21 @@ def main():
 		if read_and_replace_lines(read_file,sensor_configs['ossim-setup.source_location']+write_file_name,sensor_configs['ossim-setup.items_list'],sensor_configs['ossim-setup.replace_what'],sensor_configs['ossim-setup.replace_with']):
 			if close_config_files(read_file):
 				backup_and_rename_main_file(sensor_configs['ossim-setup.source_location'],sensor_configs['ossim-setup.source_file']+sensor_configs['ossim-setup.source_file_ext'],write_file_name)
+
+	""" For ossim-setup file in /usr/sbin folder """
+	if open_config_files(sensor_configs['ossim-setup_1.source_location'],sensor_configs['ossim-setup_1.source_file'],sensor_configs['ossim-setup_1.source_file_ext']):
+		if read_and_replace_lines(read_file,sensor_configs['ossim-setup_1.source_location']+write_file_name,sensor_configs['ossim-setup_1.items_list'],sensor_configs['ossim-setup_1.replace_what'],sensor_configs['ossim-setup_1.replace_with']):
+			if close_config_files(read_file):
+				backup_and_rename_main_file(sensor_configs['ossim-setup_1.source_location'],sensor_configs['ossim-setup_1.source_file']+sensor_configs['ossim-setup_1.source_file_ext'],write_file_name)
+
+
+	""" For ossim-setup file in /usr/share/ossim/setup folder """
+	if open_config_files(sensor_configs['ossim-setup_2.source_location'],sensor_configs['ossim-setup_2.source_file'],sensor_configs['ossim-setup_2.source_file_ext']):
+		if read_and_replace_lines(read_file,sensor_configs['ossim-setup_2.source_location']+write_file_name,sensor_configs['ossim-setup_2.items_list'],sensor_configs['ossim-setup_2.replace_what'],sensor_configs['ossim-setup_2.replace_with']):
+			if close_config_files(read_file):
+				backup_and_rename_main_file(sensor_configs['ossim-setup_2.source_location'],sensor_configs['ossim-setup_2.source_file']+sensor_configs['ossim-setup_2.source_file_ext'],write_file_name)
+
+
 
 	""" for /etc/issue to change login screen """
 	file_ext = sensor_configs['issue.source_file_ext']
