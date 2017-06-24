@@ -1,0 +1,6 @@
+---
+  admin_dns: 8.8.8.8
+  domain: Securmatic
+  email_notify: system@securmatic.com
+  hostname: alienvault
+  name: securmatic

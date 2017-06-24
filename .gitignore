@@ -1,3 +1,12 @@
+bin/
+include/
+share/
+local/
+.vagrant/
+ossim.zip
+MENIFEST.in
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

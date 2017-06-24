@@ -1,6 +1,6 @@
 
 [main]
-label=Alienvault Setup
+label=SecureMatic Setup
 menus=register_appliance,system_settings,sensor_settings,database_settings,maintenance,jailbreak,mant_support,about,mant_appliance_reboot,mant_appliance_shutdown,save_and_exit
 
 [change_first_root_passwd]
@@ -37,18 +37,18 @@ next=change_first_root_passwd
 [change_new_password_success]
 label=Change root password
 info=\nCongratulations, your root password has been successfully changed.
-cmd=dpkg-trigger --no-await Alienvault-first-time-password; dpkg --configure --pending
+cmd=dpkg-trigger --no-await alienvault-first-time-password; dpkg --configure --pending
 kwargs={'ok_label': 'Done'}
 
 [check_connection]
 label=Checking connection
-cmd=echo "Checking internet connection ..."; Alienvault-api internet_connectivity
+cmd=echo "Checking internet connection ..."; alienvault-api internet_connectivity
 next=connection_success
 next_else=connection_fail
 
 [connection_success]
 label=Setup Complete
-info=\n\nYour Alienvault USM Management Interface has been successfully setup.\n\nAccess the Alienvault web interface using the URL below.\n\n URL: https://%%value%%/
+info=\n\nYour {{Alienvault_repl}} USM Management Interface has been successfully setup.\n\nAccess the {{Alienvault_repl}} web interface using the URL below.\n\n URL: https://%%value%%/
 replace=get_framework_framework_ip
 
 [connection_fail]
@@ -57,7 +57,7 @@ info=\n\nYour system can't connect to the Internet.\nPlease check your network c
 
 [clean_first_login]
 label=Clean first root message passwd
-cmd=if [ -f /etc/ossim/first_login ]; then sed -i '/^== /d' /etc/issue; head -16 /etc/motd.tail > /tmp/motd.tail; cp /tmp/motd.tail /etc/motd.tail; cp -f /etc/motd.tail /var/run/motd; rm /tmp/motd.tail; rm /etc/ossim/first_login; fi
+cmd=if [ -f /etc/ossim/first_login ]; then head -10 /etc/issue > /tmp/issue; cp /tmp/issue /etc/issue; rm /tmp/issue; head -16 /etc/motd.tail > /tmp/motd.tail; cp /tmp/motd.tail /etc/motd.tail; cp -f /etc/motd.tail /var/run/motd; rm /tmp/motd.tail; rm /etc/ossim/first_login; fi
 
 
 #
@@ -72,15 +72,15 @@ menus=register_online,register_offline
 [register_online]
 licensed=False
 label=Online Registration
-text=\nEnter your Alienvault License Key
-input_cmd=Alienvault-api register_appliance -k "%%value%%"
+text=\nEnter your {{Alienvault_repl}} License Key
+input_cmd=alienvault-api register_appliance -k "%%value%%"
 wait_for_key=Press [Enter] to continue
 
 [register_offline]
 licensed=False
 label=Offline Registration
-cmd=dpkg -i `find /media -name Alienvault-license*.deb` &> /dev/null
-info=\nPlease connect your USB with the Alienvault License before continue
+cmd=dpkg -i `find /media -name alienvault-license*.deb` &> /dev/null
+info=\nPlease connect your USB with the {{Alienvault_repl}} License before continue
 next=register_success
 next_else=register_fail
 
@@ -104,22 +104,16 @@ info=\nIt seems that the system has been recently updated.\nThe system needs to 
 #
 [system_settings]
 label=System Preferences
-menus=network,hostname,mail_relay,locale,mant_passwd,reset_avapi_key,system_updates
+menus=network,hostname,mail_relay,locale,mant_passwd,system_updates
 
 [mant_passwd]
 label=Change Password
 menus=mant_change_passwd,mant_web_reset_passwd
 
-[reset_avapi_key]
-label=Reset Alienvault API key
-cmd=/usr/share/ossim/cd-tools/reset_avapi_key
-confirm=\nThis is going to regenerate the Alienvault API key that allows the system to communicate with the directly connected components of your deployment.\n\nPlease, make sure that all your USM components are up and running. You will be asked to provide the root password for all of them.\n\nAre you sure you want to regenerate the Alienvault API key?
-wait_for_key=Press [Enter] to continue
-
 # System settings / Network
 [network]
 label=Configure Network
-menus=admin_iface,net_iface,network_dns,network_firewall,network_proxy,network_domain,vpn,forwarding
+menus=admin_iface,net_iface,network_dns,network_firewall,network_proxy,network_domain,vpn
 
 [network_domain]
 label=Network Domain
@@ -164,7 +158,7 @@ start_sequence=True
 label=Set Network Interface IP Address
 input=net_iface_ip
 store=net_iface_ip
-text=\nIP address:\n\nThe IP address is unique to your computer and consists of four numbers separated by periods. Leave it blank to disable the interface.\nIf you don't know what to use here, consult your network administrator.
+text=\nIP address:\n\nThe IP address is unique to your computer and consists of four numbers separated by periods.If you don't know what to use here, consult your network administrator.
 next=net_iface_netmask
 sequence=net_iface
 modifier=%%net_iface_name%%
@@ -195,8 +189,8 @@ custom_func=verify_dns_internal
 
 [network_firewall]
 licensed=True
-label=Alienvault Firewall
-text=\nEnable Alienvault Firewall
+label={{Alienvault_repl}} Firewall
+text=\nEnable {{Alienvault_repl}} Firewall
 options=firewall_active
 
 [network_proxy]
@@ -238,7 +232,7 @@ sequence=network_proxy
 # System settings / Network Configuration / VPN
 [vpn]
 label=Setup VPN
-menus=vpn_enable,vpn_server,vpn_client,vpn_manual_node
+menus=vpn_enable,vpn_server,vpn_client
 
 [vpn_enable]
 licensed=True
@@ -341,7 +335,7 @@ next=vpn_client_confirm
 
 [vpn_client_confirm]
 label=Configure VPN client
-cmd=Alienvault-api make_tunnel_with_vpn -s "%%new_vpn_client%%" -p "%%vpn_client_pass%%"
+cmd=alienvault-api make_tunnel_with_vpn -s "%%new_vpn_client%%" -p "%%vpn_client_pass%%"
 confirm=\nThis is going to create a VPN tunnel for %%new_vpn_client%%.\n\nAre you sure?
 wait_for_key=Press [Enter] to continue
 next=vpn_client_success
@@ -354,51 +348,6 @@ info=\nVPN connection created successfully
 [vpn_client_fail]
 label=VPN connection not configured
 info=\nVPN connection cannot be configured
-
-[vpn_manual_node]
-licensed=True
-label=Configure VPN client from file
-options=vpn_files
-text=\nSelect the file with the VPN client configuration
-store=vpn_file
-next=vpn_manual_node_confirm
-
-[vpn_manual_node_confirm]
-label=Configure VPN client from file
-confirm=\nConfigure VPN client from file (%%vpn_file%%.tar.gz)\n\nThis process will setup the VPN configuration using the selected file.\nAre you sure you want to continue?
-next=vpn_manual_node_yes
-kwargs={'defaultno': True}
-
-[vpn_manual_node_yes]
-label=Configure VPN client from file
-cmd=echo "Extracting %%vpn_file%%.tar.gz"; rm -rf /tmp/etc; /bin/tar zxf /etc/Alienvault/network/%%vpn_file%%.tar.gz -C /tmp/ && echo "Copy the VPN configuration" && cp -arf /tmp/etc/openvpn/nodes/* /etc/openvpn/ && mv /etc/openvpn/%%vpn_file%%/*.conf /etc/openvpn/ && echo "Setting up the VPN configuration" && dpkg-trigger --no-await Alienvault-network-vpn-net-client && dpkg --pending --configure 2>/dev/null && echo "VPN Configuration Applied"; rm -rf /tmp/etc
-wait_for_key=Press [Enter] to continue
-
-
-# System settings / Network Configuration / Forwarding
-[forwarding]
-pro=True
-label=Alarm and Event Forwarding
-menus=max_retries
-
-[max_retries]
-profile=Server
-title=Set forwarding max retries
-label=Enter Retry Attempts
-text=\nEnter the number of retry attempts that should be made if alarms/events fail to send (0-20):
-input=max_retries
-next=max_retries_check
-
-[max_retries_check]
-label=Max retries check
-custom_func=is_max_retries_changed
-next_else=max_retries_info
-
-[max_retries_info]
-licensed=True
-label=Configure max retries
-info=\nChanges applied. Values out of range will be recalculated to 0 or 20.
-
 
 # System settings / Mail Relay
 
@@ -467,17 +416,7 @@ custom_func=mark_tzdata_changed
 label=Setup Date/Time manually
 input_cmd=date --set="%%value%%"
 initial_cmd=date -d now +"%F %X"
-next=date_manual_success
-next_else=date_manual_fail
 text=\nEnter Date/Time Manually\n\nFormat: Year-Month-Day Hour:Minute:Second (i.e. 2013-12-27 12:41:47)
-
-[date_manual_success]
-label=Setup Date/Time manually
-info=\n\nDate successfully updated
-
-[date_manual_fail]
-label=Setup Date/Time manually
-info=\n\nDate could not be changed.\n\nMake sure that the date format is correct, and the date introduced is valid.
 
 [date_ntp]
 label=Configure NTP Server
@@ -515,13 +454,21 @@ info=\nSystem restart required. Please, apply the changes and select "Reboot App
 #
 [system_updates]
 licensed=true
-label=Update Alienvault System
-menus=update_system,update_offline,update_feed
+label=Update {{Alienvault_repl}} System
+menus=update_system,update_system_major,update_offline,update_feed
 
 [update_system]
 label=Update System
 cmd=update-system --us
 confirm=\nThis is going to update your system and may take a while.\n\nAre you sure?
+next=update_check_reboot_needed
+next_on_value=0
+next_else=update_online_fail
+
+[update_system_major]
+label=Update System (Major)
+cmd=update-system --usm
+confirm=\nThis is going to do a major update your system and may take a while.\n\nAre you sure?
 next=update_check_reboot_needed
 next_on_value=0
 next_else=update_online_fail
@@ -535,13 +482,13 @@ next_else=update_success
 
 [update_feed]
 label=Update Threat Intelligence
-cmd=Alienvault-update --feed
-confirm=\nThis is going to update Alienvault Feed and may take a while.\n\nAre you sure?
+cmd=alienvault-update --feed
+confirm=\nThis is going to update {{Alienvault_repl}} Feed and may take a while.\n\nAre you sure?
 
 [update_offline]
 label=Update (Offline)
 cmd=update-system --uso
-info=\nPlease connect your USB with the Alienvault Update System before continue
+info=\nPlease connect your USB with the {{Alienvault_repl}} Update System before continue
 next=update_check_reboot_needed
 next_on_value=0
 next_else=update_fail
@@ -587,12 +534,12 @@ text=\nSelect Sensor Listening Interfaces (promiscuous mode)
 error=\nNo Sensor Listening Interfaces Available
 
 [sensor_server_ip]
-label=Configure Alienvault Server IP
+label=Configure {{Alienvault_repl}} Server IP
 input=server_server_ip
 text=\nEnter Server IP Address
 
 [sensor_framework_ip]
-label=Configure Alienvault Framework IP
+label=Configure {{Alienvault_repl}} Framework IP
 input=framework_framework_ip
 text=\nEnter Framework IP Address
 
@@ -642,12 +589,12 @@ label=Configure Database
 menus=database_server_ip,database_framework_ip
 
 [database_server_ip]
-label=Configure Alienvault Server IP
+label=Configure {{Alienvault_repl}} Server IP
 input=server_server_ip
 text=\nEnter Server IP Address
 
 [database_framework_ip]
-label=Configure Alienvault Framework IP
+label=Configure {{Alienvault_repl}} Framework IP
 input=framework_framework_ip
 text=\nEnter Framework IP Address
 
@@ -667,8 +614,8 @@ menus=mant_support_menu,mant_support_connectivity
 [mant_support_menu]
 licensed=True
 label=Diagnostic Tool
-input_cmd=Alienvault-api support_tool %%value%%
-text=\nThe Alienvault Diagnostic Tool collects information about the system status and sends it to the Alienvault Support Team.\n\nAll data is sent on encrypted files, only Alienvault Support Team can access to the collected info.\n\nThe Collection Process may take a while.\n\nPlease insert your Alienvault Support ticket number:
+input_cmd=alienvault-api support_tool %%value%%
+text=\nThe {{Alienvault_repl}} Diagnostic Tool collects information about the system status and sends it to the {{Alienvault_repl}} Support Team.\n\nAll data is sent on encrypted files, only {{Alienvault_repl}} Support Team can access to the collected info.\n\nThe Collection Process may take a while.\n\nPlease insert your {{Alienvault_repl}} Support ticket number:
 pro=True
 wait_for_key=Press [Enter] to continue
 
@@ -681,20 +628,20 @@ next_else=mant_disable_connect_support_front
 
 [mant_disable_connect_support_front]
 label=Managed Support Connectivity
-confirm=\nYou are about the disconnect from Alienvault remote support. Alienvault Support will no longer be able to access your system(s).\n\nAre you sure you want to disconnect Alienvault Remote Support?
+confirm=\nYou are about the disconnect from {{Alienvault_repl}} remote support. {{Alienvault_repl}} Support will no longer be able to access your system(s).\n\nAre you sure you want to disconnect {{Alienvault_repl}} Remote Support?
 next=mant_disable_connect_support
 
 [mant_enable_connect_support]
 label=Connect Remote Support
-input_cmd=Alienvault-api support_tunnel --ticket %%value%%
-text=\nConnecting to Remote Support will open an encrypted connection for Alienvault Support to diagnose any issues with your Alienvault system(s).\n\nAll data will be secure and available only to Alienvault Support.\n\nAudit logs detailing actions taken by the support representative will be made available upon request.\n\nPlease enter your ticket number below.
+input_cmd=alienvault-api support_tunnel --ticket %%value%%
+text=\nConnecting to Remote Support will open an encrypted connection for {{Alienvault_repl}} Support to diagnose any issues with your {{Alienvault_repl}} system(s).\n\nAll data will be secure and available only to {{Alienvault_repl}} Support.\n\nAudit logs detailing actions taken by the support representative will be made available upon request.\n\nPlease enter your ticket number below.
 pro=True
 wait_for_key=Press [Enter] to continue
 
 [mant_disable_connect_support]
 label=Disable Support Connectivity
 pro=True
-cmd=Alienvault-api support_tunnel --stop
+cmd=alienvault-api support_tunnel --stop
 wait_for_key=Press [Enter] to continue
 
 [mant_change_passwd]
@@ -757,7 +704,7 @@ licensed=True
 profile=Database
 label=Repair Database
 cmd=ossim-repair-tables
-confirm=\nStep 1 - Check your database for corruption\n\nDatabase corruption usually occurs as a result of a hardware failure. This process will try to repair corrupted tables in the Alienvault databases.\n\nAre you sure you want to continue?
+confirm=\nStep 1 - Check your database for corruption\n\nDatabase corruption usually occurs as a result of a hardware failure. This process will try to repair corrupted tables in the {{Alienvault_repl}} databases.\n\nAre you sure you want to continue?
 wait_for_key=Press [Enter] to continue
 kwargs={'defaultno': True}
 next=mant_db_clean_orphans
@@ -776,7 +723,7 @@ kwargs={'defaultno': True}
 licensed=True
 profile=Database
 label=Reset SIEM database
-cmd=/usr/share/ossim/cd-tools/Alienvault-restore_db --only-siem 2> /var/tmp/last_restore_siem_db.err
+cmd=/usr/share/ossim/cd-tools/alienvault-restore_db --only-siem 2> /var/tmp/last_restore_siem_db.err
 confirm=\nReset SIEM database\n\nAll events in the SIEM database will be deleted.\n\nAre you sure you want to reset the SIEM database?
 wait_for_key=Press [Enter] to continue
 kwargs={'defaultno': True}
@@ -804,7 +751,7 @@ show_if_true=PROFILE=$(grep ^profile= /etc/ossim/ossim_setup.conf | head -1 | cu
 licensed=True
 profile=Database,Server
 label=Restore database to factory settings
-cmd=/usr/share/ossim/cd-tools/Alienvault-restore_db --all 2> /var/tmp/last_restore_all_db.err
+cmd=/usr/share/ossim/cd-tools/alienvault-restore_db --all 2> /var/tmp/last_restore_all_db.err
 confirm=\nRestore database to factory settings\n\nAll customizations and inventory data will be deleted and database will be restored to initial configurations.\n\nAre you sure you want to restore to factory settings?
 wait_for_key=Press [Enter] to continue
 kwargs={'defaultno': True}
@@ -828,7 +775,7 @@ kwargs={'no_cancel': True}
 
 [add_database_system]
 label=Restore database to factory settings
-cmd=DBHOST=$(grep ^db_ip= "/etc/ossim/ossim_setup.conf" | cut -f 2 -d "="); Alienvault-api add_system --system-ip=${DBHOST} --password=%%root_password%%
+cmd=DBHOST=$(grep ^db_ip= "/etc/ossim/ossim_setup.conf" | cut -f 2 -d "="); alienvault-api add_system --system-ip=${DBHOST} --password=%%root_password%%
 next_else=failed_add_database_system
 
 [failed_add_database_system]
@@ -842,9 +789,9 @@ show_if_true=[ ! -f /etc/ossim/.migrate-db-done ]
 licensed=True
 pro=True
 profile=Database
-label=Upgrade Alienvault Database
-cmd=/usr/bin/Alienvault-migrate_mysql_engine 2> /var/log/Alienvault/update/last_migrate_database_engine.err
-confirm=\nUpgrade Alienvault Database\n\nUpgrading the Alienvault database will significantly improve performance, storage, and speed of your Alienvault device. You will not be able to access the Alienvault device during the upgrade, but data will still be collected and can be accessed once the upgrade is complete. This process may take a few minutes depending on the amount of data in your system.\n\nDo you want to continue?
+label=Upgrade {{Alienvault_repl}} Database
+cmd=/usr/bin/alienvault-migrate_mysql_engine 2> /var/tmp/last_migrate_database_engine.err
+confirm=\nUpgrade {{Alienvault_repl}} Database\n\nUpgrading the {{Alienvault_repl}} database will significantly improve performance, storage, and speed of your {{Alienvault_repl}} device. You will not be able to access the {{Alienvault_repl}} device during the upgrade, but data will still be collected and can be accessed once the upgrade is complete. This process may take a few minutes depending on the amount of data in your system.\n\nDo you want to continue?
 wait_for_key=Press [Enter] to continue
 kwargs={'defaultno': True}
 
@@ -891,7 +838,7 @@ menus=mant_disk_logger_all,mant_disk_logger_range
 [mant_disk_logger_all]
 label=Delete all logger entries
 confirm=\nThis will remove all logger data.\n\nAre you sure?
-cmd=Alienvault-api rawlogscleaner --start 0001/01/01 --end 9999/12/31
+cmd=alienvault-api rawlogscleaner --start 0001/01/01 --end 9999/12/31
 wait_for_key=Press [Enter] to continue
 #text=\nDelete all logs entries
 
@@ -904,8 +851,8 @@ next=mant_disk_logger_range_confirm
 
 [mant_disk_logger_range_confirm]
 label=Delete logger entries in a date range
-confirm=\nDo you want to delete all logs till %%logger_date%% (including this day)?
-cmd=Alienvault-api rawlogscleaner --end %%logger_date%%
+confirm=\nDo you want to delete all logs till %%logger_date%%
+cmd=alienvault-api rawlogscleaner --end %%logger_date%%
 wait_for_key=Press [Enter] to continue
 
 
@@ -919,54 +866,54 @@ menus=service_server,service_agent,service_frameworkd,service_api,service_asec,s
 
 [service_server]
 profile=Server
-label=Restart Alienvault Server Service
+label=Restart {{Alienvault_repl}} Server Service
 cmd=/etc/init.d/ossim-server restart
-confirm=\nThis will Restart The Alienvault Server Service.\n\nAre you sure?
+confirm=\nThis will Restart The {{Alienvault_repl}} Server Service.\n\nAre you sure?
 wait_for_key=Press [ENTER] to continue
 
 [service_agent]
 profile=Sensor
-label=Restart Alienvault Agent Service
+label=Restart {{Alienvault_repl}} Agent Service
 cmd=/etc/init.d/ossim-agent restart
-confirm=\nThis will Restart The Alienvault Agent Service.\n\nAre you sure?
+confirm=\nThis will Restart The {{Alienvault_repl}} Agent Service.\n\nAre you sure?
 wait_for_key=Press [ENTER] to continue
 
 [service_frameworkd]
 profile=Framework
-label=Restart Alienvault Frameworkd Service
+label=Restart {{Alienvault_repl}} Frameworkd Service
 cmd=/etc/init.d/ossim-framework restart
-confirm=\nThis will Restart The Alienvault Frameworkd Service.\n\nAre you sure?
+confirm=\nThis will Restart The {{Alienvault_repl}} Frameworkd Service.\n\nAre you sure?
 wait_for_key=Press [ENTER] to continue
 
 [service_api]
 profile=framework
-label=Restart Alienvault API Service
-cmd=/etc/init.d/Alienvault-api restart
-confirm=\nThis will Restart The Alienvault API Service.\n\nAre you sure?
+label=Restart {{Alienvault_repl}} API Service
+cmd=/etc/init.d/alienvault-api restart
+confirm=\nThis will Restart The {{Alienvault_repl}} API Service.\n\nAre you sure?
 wait_for_key=Press [ENTER] to continue
 
 [service_asec]
 profile=framework
-label=Restart Alienvault ASEC Services
+label=Restart {{Alienvault_repl}} ASEC Services
 cmd=/etc/init.d/asec-machete restart; /etc/init.d/asec-mixter restart
-confirm=\nThis will Restart The Alienvault ASEC Services.\n\nAre you sure?
+confirm=\nThis will Restart The {{Alienvault_repl}} ASEC Services.\n\nAre you sure?
 pro=True
 wait_for_key=Press [ENTER] to continue
 
 [service_forward]
 profile=server
-label=Restart Alienvault Alarm Forward Service
-cmd=/etc/init.d/Alienvault-forward restart
-confirm=\nThis will Restart The Alienvault Alarm Forward Service.\n\nAre you sure?
+label=Restart {{Alienvault_repl}} Alarm Forward Service
+cmd=/etc/init.d/alienvault-forward restart
+confirm=\nThis will Restart The {{Alienvault_repl}} Alarm Forward Service.\n\nAre you sure?
 pro=True
 wait_for_key=Press [ENTER] to continue
 
 
 [service_database]
 profile=Database
-label=Restart Alienvault Database Service
+label=Restart {{Alienvault_repl}} Database Service
 cmd=/etc/init.d/mysql restart
-confirm=\nThis will Restart The Alienvault Database Service.\n\nAre you sure?
+confirm=\nThis will Restart The {{Alienvault_repl}} Database Service.\n\nAre you sure?
 wait_for_key=Press [ENTER] to continue
 
 
@@ -980,9 +927,9 @@ wait_for_key=Press [ENTER] to continue
 
 [service_ossec]
 profile=Framework,Sensor
-label=Restart Alienvault HIDS Service
+label=Restart {{Alienvault_repl}} HIDS Service
 cmd=/etc/init.d/ossec restart
-confirm=\nThis will Restart The Alienvault HIDS Service.\n\nAre you sure?
+confirm=\nThis will Restart The {{Alienvault_repl}} HIDS Service.\n\nAre you sure?
 wait_for_key=Press [ENTER] to continue
 
 [service_openvas_manager]
@@ -1028,9 +975,9 @@ wait_for_key=Press [ENTER] to continue
 
 [service_rhythm]
 profile=Sensor
-label=Restart Alienvault Rhythm Service
-cmd=/etc/init.d/Alienvault-rhythm restart
-confirm=\nThis will Restart the Alienvault Rhythm Service.\n\nAre you sure?
+label=Restart {{Alienvault_repl}} Rhythm Service
+cmd=/etc/init.d/alienvault-rhythm restart
+confirm=\nThis will Restart the {{Alienvault_repl}} Rhythm Service.\n\nAre you sure?
 wait_for_key=Press [ENTER] to continue
 
 [mant_backup]
@@ -1041,16 +988,8 @@ menus=mant_backup_restore_conf
 label=Restore configuration backup
 options=backups
 text=\nSelect backup to restore system configurations
-next=mant_enter_password
-store=backup
-
-[mant_enter_password]
-label=Enter backup password
-options=backups
-text=\nPlease enter backup password
-password=None
-store=backup_password
 next=mant_backup_do_restore_conf_confirm
+store=backup
 
 [mant_backup_do_restore_conf_confirm]
 label=Restore configuration backup
@@ -1060,7 +999,7 @@ kwargs={'defaultno': True}
 
 [mant_backup_do_restore_conf_yes]
 label=Restore
-cmd=Alienvault-api restore_backup --type=configuration --name=%%backup%%  --password=%%backup_password%%
+cmd=alienvault-api restore_backup --type=configuration --name=%%backup%%
 wait_for_key=Press [Enter] to continue
 
 #
@@ -1072,14 +1011,14 @@ label=Update license information
 menus=register_update_online,register_update_offline
 [register_update_online]
 label=Online Registration
-text=\nEnter your Alienvault License Key
-input_cmd=Alienvault-api register_appliance -k "%%value%%"
+text=\nEnter your {{Alienvault_repl}} License Key
+input_cmd=alienvault-api register_appliance -k "%%value%%"
 wait_for_key=Press [Enter] to continue
 
 [register_update_offline]
 label=Offline Registration
-cmd=dpkg -i `find /media -name Alienvault-license*.deb` &> /dev/null
-info=\nPlease connect your USB with the Alienvault License before continue
+cmd=dpkg -i `find /media -name alienvault-license*.deb` &> /dev/null
+info=\nPlease connect your USB with the {{Alienvault_repl}} License before continue
 next=register_update_success
 next_else=register_update_fail
 
@@ -1100,7 +1039,7 @@ info=\nThere was an error registering this appliance.
 [tools]
 licensed=True
 label=Troubleshooting Tools
-menus=system_logs,Alienvault_logs,htop,netstat,bwm-ng
+menus=system_logs,alienvault_logs,htop,netstat,bwm-ng
 
 
 
@@ -1135,63 +1074,63 @@ cmd=LESSSECURE=1 less /var/log/daemon.log
 info=\nPlease press 'q' to return to this menu
 
 
-# Tools / View Logs / Alienvault Logs
-[Alienvault_logs]
-label=View Alienvault Components Logs
+# Tools / View Logs / {{Alienvault_repl}} Logs
+[alienvault_logs]
+label=View {{Alienvault_repl}} Components Logs
 menus=log_server,log_agent,log_api,log_frameworkd,log_database,log_forward,log_asec,log_rhythm
 
 [log_server]
 profile=Server
-label=View Alienvault Server log
-cmd=LESSSECURE=1 less /var/log/Alienvault/server/server.log
+label=View {{Alienvault_repl}} Server log
+cmd=LESSSECURE=1 less /var/log/alienvault/server/server.log
 info=\nPlease press 'q' to return to this menu
 
 [log_agent]
 profile=Sensor
-label=View Alienvault Agent log
-cmd=LESSSECURE=1 less -f /var/log/Alienvault/agent/agent.log
+label=View {{Alienvault_repl}} Agent log
+cmd=LESSSECURE=1 less -f /var/log/alienvault/agent/agent.log
 info=\nPlease press 'q' to return to this menu
 
 [log_api]
 profile=Framework
-label=View Alienvault API log
-cmd=LESSSECURE=1 less -f /var/log/Alienvault/api/api.log
+label=View {{Alienvault_repl}} API log
+cmd=LESSSECURE=1 less -f /var/log/alienvault/api/api.log
 info=\nPlease press 'q' to return to this menu
 
 [log_frameworkd]
 profile=Framework
-label=View Alienvault Frameworkd log
+label=View {{Alienvault_repl}} Frameworkd log
 cmd=LESSSECURE=1 less /var/log/ossim/frameworkd.log
 info=\nPlease press 'q' to return to this menu
 
 [log_database]
 profile=Database
-label=View Alienvault Database log
+label=View {{Alienvault_repl}} Database log
 cmd=LESSSECURE=1 less /var/log/mysql/mysql.err
 info=\nPlease press 'q' to return to this menu
 
 [log_forward]
 profile=server
-label=View Alienvault Forward Log
-cmd=LESSSECURE=1 less /var/log/Alienvault/forward/forward.log
+label=View {{Alienvault_repl}} Forward Log
+cmd=LESSSECURE=1 less /var/log/alienvault/forward/forward.log
 info=\nPlease press 'q' to return to this menu
 
 [log_asec]
 profile=framework
-label=View Alienvault ASEC Log
+label=View {{Alienvault_repl}} ASEC Log
 cmd=LESSSECURE=1 less /var/log/asec/mixter.log;LESSSECURE=1 less /var/log/asec/macheted.log
 info=\nPlease press 'q' to return to this menu
 
 [log_rhythm]
 profile=Sensor
-label=View Alienvault Rhythm Log
-cmd=LESSSECURE=1 less /var/log/Alienvault/rhythm/rhythm.log
+label=View {{Alienvault_repl}} Rhythm Log
+cmd=LESSSECURE=1 less /var/log/alienvault/rhythm/rhythm.log
 info=\nPlease press 'q' to return to this menu
 
 # Tools
 [htop]
 label=htop
-cmd=su -s /bin/bash - nobody -c htop
+cmd=su - nobody -c htop
 info=\nPlease press 'q' to return to this menu
 
 [netstat]
@@ -1206,7 +1145,7 @@ info=\nPlease press 'q' to return to this menu
 
 [doctor]
 label=Doctor
-cmd=if [ -f /usr/bin/Alienvault-doctor ]; then /usr/bin/Alienvault-doctor | LESSSECURE=1 less -R; else read -p "Alienvault Doctor is not installed! Press [ENTER] to continue..."; fi
+cmd=if [ -f /usr/bin/alienvault-doctor ]; then /usr/bin/alienvault-doctor | LESSSECURE=1 less -R; else read -p "{{Alienvault_repl}} Doctor is not installed! Press [ENTER] to continue..."; fi
 info=\nPlease press 'q' to return to this menu
 
 
@@ -1215,7 +1154,7 @@ info=\nPlease press 'q' to return to this menu
 #
 [about]
 label=About this Installation
-cmd=Alienvault-api about
+cmd=alienvault-api about
 wait_for_key=Press [ENTER] to continue
 
 
@@ -1250,7 +1189,7 @@ next=reconfig
 
 [reconfig]
 label=Reconfig
-cmd=Alienvault-reconfig; dpkg-reconfigure Alienvault-dummy-common
+cmd=alienvault-reconfig; dpkg-reconfigure alienvault-dummy-common
 error=\nError Applying Changes
 next=reconfig_finish
 
