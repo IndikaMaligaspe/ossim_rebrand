@@ -5,6 +5,7 @@ local/
 .vagrant/
 ossim.zip
 MENIFEST.in
+inventory.ini
 
 
 # Byte-compiled / optimized / DLL files

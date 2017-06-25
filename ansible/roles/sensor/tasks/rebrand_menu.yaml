@@ -1,10 +1,10 @@
 ---
-  - include: load config vars
+  - name: load config vars
     include_vars:
       file: ossim_setup_conf_{{env}}.yaml
       name: ossim_setup_configs
 
-  - include: load rebrand vars
+  - name: load rebrand vars
     include_vars:
       file: rebrand_vars.yaml
       name: rebrand_vars
@@ -29,41 +29,26 @@
      vpn_port: "{{ ossim_setup_configs.vpn_port }}"
 
   - name : Replace ossim_setup.conf file
-     lineinfile:
+    lineinfile:
        dest: /etc/ossim/ossim_setup.conf
        regexp: '^{{ item.property }}'
-       replace: '{{ item.value }}'
-       with_items:
-          - property: 'admin_dns'
-             value: "admin_dns={{admin_dns}}"
-          - property: 'domain'
-            value: "domain={{domain}}"
-          - property: 'email_notify'
-            value: "email_notify={{email_notify}}"
-          - property: 'hostname'
-            value: "hostname={{hostname}}"
-          - property: 'name'
-            value: "name={{name}}"
-          - property: 'admin_gateway'
-            value: "admin_gateway={{admin_gateway}}"
-          - property: 'admin_ip'
-            value: "admin_ip={{admin_ip}}"
-          - property: 'admin_netmask'
-            value: "admin_netmask={{admin_netmask}}"
-          - property: 'interface'
-            value: "interface={{interface}}"
-          - property: 'framework_ip'
-            value: "framework_ip={{framework_ip}}"
-          - property: 'ha_local_node_ip'
-            value: "ha_local_node_ip={{ha_local_node_ip}}"
-          - property: 'networks'
-            value: "networks={{networks}}"
-          - property: 'server_ip'
-            value: "server_ip={{server_ip}}"
-          - property: 'vpn_net'
-            value: "vpn_net={{vpn_net}}"
-          - property: 'vpn_netmask'
-            value: "vpn_netmask={{vpn_netmask}}"
-          - property: 'vpn_port'
-            value: "vpn_port={{vpn_port}}"
-      state: present
+       line: '{{ item.value }}'
+       state: present
+    with_items:
+       - { property: 'admin_dns' ,  value: "admin_dns={{admin_dns}}"}
+       - { property: 'domain' ,  value: "domain={{domain}}" }
+       - { property: 'email_notify' , value: "email_notify={{email_notify}}" }
+       - { property: 'hostname', value: "hostname={{hostname}}" }
+       - { property: 'name' , value: "name={{name}}" }
+       - { property: 'admin_gateway', value: "admin_gateway={{admin_gateway}}" }
+       - { property: 'admin_ip', value: "admin_ip={{admin_ip}}" }
+       - { property: 'admin_netmask' , value: "admin_netmask={{admin_netmask}}" }
+       - { property: 'interface', value: "interface={{interface}}" }
+       - { property: 'framework_ip' , value: "framework_ip={{framework_ip}}" }
+       - { property: 'ha_local_node_ip' , value: "ha_local_node_ip={{ha_local_node_ip}}" }
+       - { property: 'networks' , value: "networks={{networks}}" }
+       - { property: 'server_ip' , value: "server_ip={{server_ip}}" }
+       - { property: 'vpn_net' , value: "vpn_net={{vpn_net}}" }
+       - { property: 'vpn_netmask' , value: "vpn_netmask={{vpn_netmask}}" }
+       - { property: 'vpn_port' , value: "vpn_port={{vpn_port}}" }
+    # state: present

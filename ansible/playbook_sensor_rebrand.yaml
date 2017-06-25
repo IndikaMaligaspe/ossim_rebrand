@@ -1,0 +1,10 @@
+---
+  - hosts: "{{env}}"
+    gather_facts: true
+    sudo: true
+    # pre_tasks:
+    #   - name: update apt cache
+    #     apt: update_cache=yes
+
+    roles:
+      - sensor

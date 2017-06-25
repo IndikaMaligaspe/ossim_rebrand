@@ -2,11 +2,11 @@
   admin_dns: 8.8.8.8
   domain: Securmatic
   email_notify: system@securmatic.com
-  hostname: alienvault
+  hostname: securmatic
   name: securmatic
   admin_gateway: 192.168.50.1
   admin_ip: 192.168.50.6
-  admin_netmask: 255.25.255.0
+  admin_netmask: 255.255.255.0
   interface: eth0
   framework_ip: 192.168.50.6
   ha_local_node_ip: 192.168.200.2
