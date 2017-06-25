@@ -1,3 +1,10 @@
 ---
-  - name: rebrand menu.conf
-  
+  - include: load config vars
+    include_vars:
+      file: ossim_setup_conf_{{env}}.yaml
+      name: ossim_setup_configs
+
+  - include: load rebrand vars
+    include_vars:
+      file: rebrand_vars.yaml
+      name: rebrand_vars
