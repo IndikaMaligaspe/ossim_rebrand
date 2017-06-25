@@ -4,3 +4,14 @@
   email_notify: system@securmatic.com
   hostname: alienvault
   name: securmatic
+  admin_gateway: 192.168.50.1
+  admin_ip: 192.168.50.6
+  admin_netmask: 255.25.255.0
+  interface: eth0
+  framework_ip: 192.168.50.6
+  ha_local_node_ip: 192.168.200.2
+  networks: 192.168.0.0/16,172.16.0.0/12,10.0.0.0/8
+  server_ip: 192.168.50.6
+  vpn_net: 10.67.68
+  vpn_netmask: 255.255.255.0
+  vpn_port: 33800
