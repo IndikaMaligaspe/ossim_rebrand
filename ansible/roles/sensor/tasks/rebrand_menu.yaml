@@ -8,3 +8,62 @@
     include_vars:
       file: rebrand_vars.yaml
       name: rebrand_vars
+
+  - set_fact:
+     Alienvault_repl : "{{ rebrand_vars.label_change_to }}"
+     admin_dns: "{{ ossim_setup_configs.admin_dns }}"
+     domain: "{{ ossim_setup_configs.domain }}"
+     email_notify: "{{ ossim_setup_configs.email_notify }}"
+     hostname: "{{ ossim_setup_configs.hostname }}"
+     name: "{{ ossim_setup_configs.name }}"
+     admin_gateway: "{{ ossim_setup_configs.admin_gateway }}"
+     admin_ip: "{{ ossim_setup_configs.admin_ip }}"
+     admin_netmask: "{{ ossim_setup_configs.admin_netmask }}"
+     interface: "{{ ossim_setup_configs.interface }}"
+     framework_ip: "{{ ossim_setup_configs.framework_ip }}"
+     ha_local_node_ip: "{{ ossim_setup_configs.ha_local_node_ip }}"
+     networks: "{{ ossim_setup_configs.networks }}"
+     server_ip: "{{ ossim_setup_configs.server_ip }}"
+     vpn_net: "{{ ossim_setup_configs.vpn_net }}"
+     vpn_netmask: "{{ ossim_setup_configs.vpn_netmask }}"
+     vpn_port: "{{ ossim_setup_configs.vpn_port }}"
+
+  - name : Replace ossim_setup.conf file
+     lineinfile:
+       dest: /etc/ossim/ossim_setup.conf
+       regexp: '^{{ item.property }}'
+       replace: '{{ item.value }}'
+       with_items:
+          - property: 'admin_dns'
+             value: "admin_dns={{admin_dns}}"
+          - property: 'domain'
+            value: "domain={{domain}}"
+          - property: 'email_notify'
+            value: "email_notify={{email_notify}}"
+          - property: 'hostname'
+            value: "hostname={{hostname}}"
+          - property: 'name'
+            value: "name={{name}}"
+          - property: 'admin_gateway'
+            value: "admin_gateway={{admin_gateway}}"
+          - property: 'admin_ip'
+            value: "admin_ip={{admin_ip}}"
+          - property: 'admin_netmask'
+            value: "admin_netmask={{admin_netmask}}"
+          - property: 'interface'
+            value: "interface={{interface}}"
+          - property: 'framework_ip'
+            value: "framework_ip={{framework_ip}}"
+          - property: 'ha_local_node_ip'
+            value: "ha_local_node_ip={{ha_local_node_ip}}"
+          - property: 'networks'
+            value: "networks={{networks}}"
+          - property: 'server_ip'
+            value: "server_ip={{server_ip}}"
+          - property: 'vpn_net'
+            value: "vpn_net={{vpn_net}}"
+          - property: 'vpn_netmask'
+            value: "vpn_netmask={{vpn_netmask}}"
+          - property: 'vpn_port'
+            value: "vpn_port={{vpn_port}}"
+      state: present
