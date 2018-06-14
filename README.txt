@@ -1,4 +1,4 @@
-This is python based rebranding application written by securmatic in order install ossim, ossec,snort and proprietory plugins
+This is python based rebranding application to install ossim, ossec,snort and proprietory plugins
 
 1. The rebrand_config.py will rebrand the following files
 
